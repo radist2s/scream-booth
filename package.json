@@ -1,0 +1,36 @@
+{
+  "private": true,
+  "name": "scream-booth",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
+  "author": {
+    "name": "Alex Batalov",
+    "email": "radist2s@gmail.com"
+  },
+  "lint-staged": {
+    "!(.yarn)/**/*.{js,jsx,ts,tsx}": "eslint --max-warnings 0 --no-ignore .eslintrc.js",
+    "*.{js,jsx,ts,tsx,scss}": [
+      "prettier --write"
+    ]
+  },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "arrowParens": "avoid",
+    "endOfLine": "auto",
+    "experimentalBabelParserPluginsList": [
+      "typescript",
+      "jsx",
+      "decorators-legacy",
+      "classProperties"
+    ]
+  },
+  "dependencies": {
+    "dts-gen": "^0.6.0",
+    "prettier": "^2.5.1"
+  }
+}

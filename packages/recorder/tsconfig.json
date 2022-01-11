@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "strict": true,
+    "baseUrl": "src",
+    "outDir": "dist",
+    "esModuleInterop": true,
+    "types": ["node", "./node-audiorecorder"]
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
