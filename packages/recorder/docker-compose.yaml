@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  recorder:
+    privileged: true
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - SCREAM_BOX_RECORDER_OUT_DIR=/scream-recordings
+      - SCREAM_BOX_CONTROLLER_PORT=${SCREAM_BOX_CONTROLLER_PORT}
+      - SCREAM_BOX_CONTROLLER_PORT_SPEED=115200
+      - "DEBUG=scream-box:recorder"
+    devices:
+      - "/dev/snd:/dev/snd"
+      - "${DOCKER_HOST_SCREAM_BOX_CONTROLLER_PORT}:${SCREAM_BOX_CONTROLLER_PORT}"
+      - "/dev/snd/controlC0:/dev/snd/controlC0"
+      - "/dev/snd/pcmC0D0c:/dev/snd/pcmC0D0c"
+      - "/dev/snd/pcmC0D0p:/dev/snd/pcmC0D0p"
+      - "/dev/snd/pcmC0D1c:/dev/snd/pcmC0D1c"
+      - "/dev/snd/seq:/dev/snd/seq"
+      - "/dev/snd/timer:/dev/snd/timer"
+    volumes:
+      - "./recordings:/records-storage:rw"
+
+volumes:
+  scream-recordings:

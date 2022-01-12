@@ -24,6 +24,7 @@ play -t raw -r 16k -e signed -b 16 -c 1 snake.raw
 * Mac
     ```
     ffmpeg -list_devices true -f avfoundation -i dummy
+    sox -V6 -n -t coreaudio junkname
     ```
 * Windows 
     ```
@@ -40,6 +41,39 @@ play -t raw -r 16k -e signed -b 16 -c 1 snake.raw
     ```
     ffmpeg -f dshow -i audio="Device name" path-to-file\file-name.mp3
     ```
+
+# Linux
+```bash
+sudo apt install alsa alsa-utils 
+```
+
+### Test SoX
+```bash
+play -n -c1 synth 3 sine 500
+```
+
+### Test alsa
+With [speaker-test](http://manpages.ubuntu.com/manpages/impish/man1/speaker-test.1.html):
+```bash
+Produce stereo sound from one stereo jack:
+ speaker-test -Dplug:front -c2
+
+Produce 4 speaker sound from two stereo jacks:
+ speaker-test -Dplug:surround40 -c4
+
+Produce 5.1 speaker sound from three stereo jacks:
+ speaker-test -Dplug:surround51 -c6
+
+To send a nice low 75Hz tone to the Woofer  and  then  exit  without  touching  any  other
+speakers:
+ speaker-test -Dplug:surround51 -c6 -s1 -f75
+
+To do a 2-speaker test using the spdif (coax or optical) output:
+ speaker-test -Dplug:spdif -c2
+
+Play in the order of front-right and front-left from the front PCM
+ speaker-test -Dplug:front -c2 -mFR,FL
+```
 
 ## SoX
 
