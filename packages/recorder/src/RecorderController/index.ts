@@ -69,21 +69,18 @@ export const getSerialPortButton = async ({
     ? Number(SCREAM_BOX_CONTROLLER_BUTTON_DEBOUNCE_TIME)
     : 3000;
 
-  const debounceChange = debounce(
-    (data: number) => {
-      const state = data ? 'inactive' : 'active';
-      debug({ state });
-      if (state === 'active') {
-        activate();
-      } else {
-        deactivate();
-      }
-    },
-    buttonDebounceTime,
-    { leading: true }
-  );
+  const debounceDeactivate = debounce(deactivate, buttonDebounceTime, { leading: false });
 
-  board.digitalRead(BUTTON_READ_PIN, debounceChange);
+  board.digitalRead(BUTTON_READ_PIN, (data: number) => {
+    const state = data ? 'inactive' : 'active';
+    debug(`Button state is [${state}]`);
+    if (state === 'active') {
+      debounceDeactivate.cancel();
+      activate();
+    } else {
+      debounceDeactivate();
+    }
+  });
 
   const { SCREAM_BOX_CONTROLLER_BUTTON_LIGHT_PIN } = process.env;
   const BUTTON_LIGHT_PIN = SCREAM_BOX_CONTROLLER_BUTTON_LIGHT_PIN
