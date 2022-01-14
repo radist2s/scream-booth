@@ -19,6 +19,16 @@ play -t raw -r 16k -e signed -b 16 -c 1 snake.raw
 --endian is also interesting
 ```
 
+### List Alsa Recording devices
+```bash
+arecord -L
+```
+
+### Test alsa device for recording
+```
+AUDIODEV="hw:CARD=I82801AAICH,DEV=0" AUDIODRIVER=alsa rec -d
+```
+
 ### List Devices
 
 * Mac

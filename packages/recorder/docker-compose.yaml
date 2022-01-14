@@ -7,12 +7,13 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - SCREAM_BOX_RECORDER_OUT_DIR=/scream-recordings
+      - SCREAM_BOX_RECORDER_OUT_DIR=/recordings
       - SCREAM_BOX_CONTROLLER_PORT=${SCREAM_BOX_CONTROLLER_PORT}
-      - SCREAM_BOX_CONTROLLER_PORT_SPEED=115200
-      - "DEBUG=scream-box:recorder"
+      - SCREAM_BOX_CONTROLLER_PORT_SPEED=57600
+      - "DEBUG=scream-booth:*"
+      - SOX_AUDIODEV=hw:CARD=I82801AAICH,DEV=0
+      - SOX_AUDIODRIVER=alsa
     devices:
-      - "/dev/snd:/dev/snd"
       - "${DOCKER_HOST_SCREAM_BOX_CONTROLLER_PORT}:${SCREAM_BOX_CONTROLLER_PORT}"
       - "/dev/snd/controlC0:/dev/snd/controlC0"
       - "/dev/snd/pcmC0D0c:/dev/snd/pcmC0D0c"
@@ -21,7 +22,7 @@ services:
       - "/dev/snd/seq:/dev/snd/seq"
       - "/dev/snd/timer:/dev/snd/timer"
     volumes:
-      - "./recordings:/records-storage:rw"
+      - "./recordings:/recordings:rw"
 
 volumes:
   scream-recordings:

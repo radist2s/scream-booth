@@ -5,21 +5,27 @@
   "license": "MIT",
   "scripts": {
     "build": "rimraf ./dist/* && tsc --build tsconfig.json",
-    "run": "yarn build && cross-env NODE_ENV=developemnt DEBUG=scream-box:recorder node dist/index.js",
-    "run:production": "node dist/index.js"
+    "start": "yarn build && cross-env NODE_ENV=developemnt DEBUG=scream-booth:* node dist/index.js",
+    "start:production": "node dist/index.js",
+    "start:firmata": "cross-env DEBUG=scream-booth:controller node dist/controller.js"
   },
   "dependencies": {
     "@radist2s/naudiodon": "^2.3.6-alpha",
-    "@types/debug": "^4.1.7",
-    "@types/node": "^17.0.8",
-    "@types/serialport": "^8.0.2",
     "cross-env": "^7.0.3",
     "debug": "^4.3.3",
     "dotenv": "^11.0.0",
-    "ffmpeg-stream": "^0.7.0",
+    "firmata": "^2.3.0",
+    "lodash": "^4.17.21",
     "node-audiorecorder": "^2.2.0",
     "rimraf": "^3.0.2",
     "serialport": "^9.2.8",
     "typescript": "^4.5.4"
+  },
+  "devDependencies": {
+    "@types/debug": "^4.1.7",
+    "@types/firmata": "^0.19.4",
+    "@types/lodash": "^4.14.178",
+    "@types/node": "^17.0.8",
+    "@types/serialport": "^8.0.2"
   }
 }
