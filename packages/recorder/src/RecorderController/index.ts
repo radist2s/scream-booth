@@ -82,20 +82,44 @@ export const getSerialPortButton = async ({
     }
   });
 
-  const { SCREAM_BOX_CONTROLLER_BUTTON_LIGHT_PIN } = process.env;
-  const BUTTON_LIGHT_PIN = SCREAM_BOX_CONTROLLER_BUTTON_LIGHT_PIN
+  return initButtonLight(board);
+};
+
+const initButtonLight = (board: Firmata) => {
+  const {
+    SCREAM_BOX_CONTROLLER_BUTTON_LIGHT_PIN,
+    SCREAM_BOX_CONTROLLER_BUTTON_INVERTED_LIGHT_PIN,
+  } = process.env;
+  const lightPin = SCREAM_BOX_CONTROLLER_BUTTON_LIGHT_PIN
     ? Number(SCREAM_BOX_CONTROLLER_BUTTON_LIGHT_PIN)
-    : 13;
+    : 12;
 
-  board.pinMode(BUTTON_LIGHT_PIN, Board.PIN_MODE.OUTPUT);
-  board.digitalWrite(BUTTON_LIGHT_PIN, Board.PIN_STATE.LOW);
+  const lightInvertedPin = SCREAM_BOX_CONTROLLER_BUTTON_INVERTED_LIGHT_PIN
+    ? Number(SCREAM_BOX_CONTROLLER_BUTTON_INVERTED_LIGHT_PIN)
+    : 11;
 
-  return {
+  const lightHelperPin = 13;
+
+  board.pinMode(lightPin, Board.PIN_MODE.OUTPUT);
+  board.pinMode(lightHelperPin, Board.PIN_MODE.OUTPUT);
+  board.pinMode(lightInvertedPin, Board.PIN_MODE.OUTPUT);
+
+  const handlers = {
     buttonLightOn() {
-      board.digitalWrite(BUTTON_LIGHT_PIN, Board.PIN_STATE.HIGH);
+      debug('buttonLightOn');
+      board.digitalWrite(lightPin, Board.PIN_STATE.LOW);
+      board.digitalWrite(lightHelperPin, Board.PIN_STATE.HIGH);
+      board.digitalWrite(lightInvertedPin, Board.PIN_STATE.HIGH);
     },
     buttonLightOff() {
-      board.digitalWrite(BUTTON_LIGHT_PIN, Board.PIN_STATE.LOW);
+      debug('buttonLightOff');
+      board.digitalWrite(lightPin, Board.PIN_STATE.HIGH);
+      board.digitalWrite(lightHelperPin, Board.PIN_STATE.LOW);
+      board.digitalWrite(lightInvertedPin, Board.PIN_STATE.LOW);
     },
   } as const;
+
+  handlers.buttonLightOff();
+
+  return handlers;
 };

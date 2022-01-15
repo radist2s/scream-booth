@@ -7,11 +7,13 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - SCREAM_BOX_RECORDER_OUT_DIR=/recordings
+      - SCREAM_BOX_RECORDER_OUT_DIR=/recordings/out
+      - SCREAM_BOX_RECORDER_OUT_TMP_DIR=/recordings/tmp
       - SCREAM_BOX_CONTROLLER_PORT=${SCREAM_BOX_CONTROLLER_PORT}
       - SCREAM_BOX_CONTROLLER_PORT_SPEED=57600
       - "DEBUG=scream-booth:*"
-      - SOX_AUDIODEV=hw:CARD=I82801AAICH,DEV=0
+#      - SOX_AUDIODEV=hw:CARD=I82801AAICH,DEV=0
+      - SOX_AUDIODEV=hw:CARD=Intel,DEV=0
       - SOX_AUDIODRIVER=alsa
     devices:
       - "${DOCKER_HOST_SCREAM_BOX_CONTROLLER_PORT}:${SCREAM_BOX_CONTROLLER_PORT}"
@@ -22,7 +24,21 @@ services:
       - "/dev/snd/seq:/dev/snd/seq"
       - "/dev/snd/timer:/dev/snd/timer"
     volumes:
-      - "./recordings:/recordings:rw"
+      - "scream-booth-recordings:/recordings:rw"
+
+  uploader:
+    build:
+      context: .
+      dockerfile: uploader/Dockerfile
+    extra_hosts:
+      - "scream-booth-upload-server:188.120.247.75"
+    environment:
+      - UPLOAD_SOURCE_DIR=/recordings/out
+      - UPLOAD_DEST=scream-uploader@scream-booth-upload-server:~/scream-booth-recording
+    volumes:
+      - "scream-booth-recordings:/recordings:rw"
+      - "./uploader/id_rsa:/ssh/id_rsa:ro"
 
 volumes:
-  scream-recordings:
+  scream-booth-recordings:
+    external: true

@@ -4,6 +4,7 @@ import AudioRecorder from 'node-audiorecorder';
 import { config } from 'dotenv';
 import debugDefault from 'debug';
 import { getSerialPortButton } from './RecorderController';
+import { intervalToDuration, formatDuration } from 'date-fns';
 
 const SAMPLE_RATE = 44100;
 const CHANNEL_COUNT = 1;
@@ -72,22 +73,63 @@ const startSoXAudioRecorder = () => {
     console
   );
 
-  const { SCREAM_BOX_RECORDER_OUT_DIR } = process.env;
-  const fileDirectory = SCREAM_BOX_RECORDER_OUT_DIR
-    ? path.isAbsolute(SCREAM_BOX_RECORDER_OUT_DIR)
-      ? SCREAM_BOX_RECORDER_OUT_DIR
-      : path.resolve(process.cwd(), SCREAM_BOX_RECORDER_OUT_DIR)
+  const {
+    SCREAM_BOX_RECORDER_OUT_DIR: recorderOutDir,
+    SCREAM_BOX_RECORDER_OUT_TMP_DIR: recorderOutTmpDir,
+  } = process.env;
+
+  const fileOutDirectory = recorderOutDir
+    ? path.isAbsolute(recorderOutDir)
+      ? recorderOutDir
+      : path.resolve(process.cwd(), recorderOutDir)
     : process.cwd();
 
-  if (!fs.existsSync(fileDirectory)) {
-    fs.mkdirSync(fileDirectory, { recursive: true });
+  const fileDirectoryTmp = recorderOutTmpDir
+    ? path.isAbsolute(recorderOutTmpDir)
+      ? recorderOutTmpDir
+      : path.resolve(process.cwd(), recorderOutTmpDir)
+    : path.join(process.cwd(), 'tmp');
+
+  if (!fs.existsSync(fileOutDirectory)) {
+    fs.mkdirSync(fileOutDirectory, { recursive: true });
   }
 
-  const filePath = path.join(fileDirectory, new Date().toISOString().concat(`.${fileType}`));
+  if (!fs.existsSync(fileDirectoryTmp)) {
+    fs.mkdirSync(fileDirectoryTmp, { recursive: true });
+  }
 
-  debug('Writing new recording file at: ', filePath);
+  const fileName = new Date().toISOString().concat(`.${fileType}`);
+  const fileTmpPath = path.join(fileDirectoryTmp, fileName);
+  const fileOutPath = path.join(fileOutDirectory, fileName);
 
-  const fileStream = fs.createWriteStream(filePath, { encoding: 'binary' });
+  debug('Writing new recording file at: ', fileTmpPath);
+
+  const fileStream = fs.createWriteStream(fileTmpPath, { encoding: 'binary' });
+
+  fileStream.on('finish', () => {
+    const recordingEndTime = new Date();
+
+    const duration = recordingStartTime
+      ? formatDuration(intervalToDuration({ start: recordingStartTime, end: recordingEndTime }))
+      : 'ZERO';
+
+    fs.stat(fileTmpPath, (error, stat) => {
+      if (error)
+        return console.error(`Error while reading stats of the file: ${fileTmpPath}`, error);
+      if (!stat.size) return console.error(`Recording is empty: ${fileTmpPath}`);
+
+      fs.rename(fileTmpPath, fileOutPath, error => {
+        if (error) {
+          console.error(error);
+        }
+
+        debug(`Recording moved to out directory: ${fileOutPath}`);
+        debug(`Recording duration: ${duration}`);
+      });
+    });
+  });
+
+  const recordingStartTime = new Date();
 
   audioRecorder.start().stream()?.pipe(fileStream);
 

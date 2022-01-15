@@ -4,14 +4,15 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build": "rimraf ./dist/* && tsc --build tsconfig.json",
-    "start": "yarn build && cross-env NODE_ENV=developemnt DEBUG=scream-booth:* node dist/index.js",
-    "start:production": "node dist/index.js",
-    "start:firmata": "cross-env DEBUG=scream-booth:controller node dist/controller.js"
+    "build:recorder": "rimraf ./dist/* && tsc --build tsconfig.json",
+    "start:recorder": "yarn build:recorder && cross-env NODE_ENV=developemnt DEBUG=scream-booth:* node dist/index.js",
+    "start:recorder:production": "node dist/index.js",
+    "start:recorder:uploader": "sshync $SCREAM_BOX_RECORDER_OUT_DIR $SCREAM_BOX_UPLOADER_DEST"
   },
   "dependencies": {
     "@radist2s/naudiodon": "^2.3.6-alpha",
     "cross-env": "^7.0.3",
+    "date-fns": "^2.28.0",
     "debug": "^4.3.3",
     "dotenv": "^11.0.0",
     "firmata": "^2.3.0",
@@ -19,6 +20,7 @@
     "node-audiorecorder": "^2.2.0",
     "rimraf": "^3.0.2",
     "serialport": "^9.2.8",
+    "sshync": "^1.1.2",
     "typescript": "^4.5.4"
   },
   "devDependencies": {

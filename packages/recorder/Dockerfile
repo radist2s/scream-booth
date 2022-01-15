@@ -7,5 +7,5 @@ WORKDIR /app
 COPY ./package.json ./
 RUN yarn install
 COPY ./ ./
-RUN yarn build
-CMD ["yarn", "start:production"]
+RUN yarn build:recorder
+CMD ["yarn", "start:recorder:production"]

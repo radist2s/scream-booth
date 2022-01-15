@@ -1,0 +1,3 @@
+[submodule "packages/radio"]
+	path = packages/radio
+	url = git@github.com:radist2s/docker-music-stack.git
