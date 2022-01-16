@@ -74,8 +74,8 @@ const startSoXAudioRecorder = () => {
   );
 
   const {
-    SCREAM_BOX_RECORDER_OUT_DIR: recorderOutDir,
-    SCREAM_BOX_RECORDER_OUT_TMP_DIR: recorderOutTmpDir,
+    SCREAM_BOOTH_RECORDER_OUT_DIR: recorderOutDir,
+    SCREAM_BOOTH_RECORDER_OUT_TMP_DIR: recorderOutTmpDir,
   } = process.env;
 
   const fileOutDirectory = recorderOutDir

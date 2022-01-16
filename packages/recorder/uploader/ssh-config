@@ -1,5 +1,5 @@
 Host scream-booth-upload-server
-    Port 22
+    Port 2222
     IdentitiesOnly yes
     IdentityFile   /root/.ssh/id_rsa
     PubkeyAuthentication yes

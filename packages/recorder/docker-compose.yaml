@@ -7,16 +7,16 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - SCREAM_BOX_RECORDER_OUT_DIR=/recordings/out
-      - SCREAM_BOX_RECORDER_OUT_TMP_DIR=/recordings/tmp
-      - SCREAM_BOX_CONTROLLER_PORT=${SCREAM_BOX_CONTROLLER_PORT}
-      - SCREAM_BOX_CONTROLLER_PORT_SPEED=57600
+      - SCREAM_BOOTH_RECORDER_OUT_DIR=/recordings/out
+      - SCREAM_BOOTH_RECORDER_OUT_TMP_DIR=/recordings/tmp
+      - SCREAM_BOOTH_CONTROLLER_PORT=${SCREAM_BOOTH_CONTROLLER_PORT}
+      - SCREAM_BOOTH_CONTROLLER_PORT_SPEED=57600
       - "DEBUG=scream-booth:*"
 #      - SOX_AUDIODEV=hw:CARD=I82801AAICH,DEV=0
       - SOX_AUDIODEV=hw:CARD=Intel,DEV=0
       - SOX_AUDIODRIVER=alsa
     devices:
-      - "${DOCKER_HOST_SCREAM_BOX_CONTROLLER_PORT}:${SCREAM_BOX_CONTROLLER_PORT}"
+      - "${DOCKER_HOST_SCREAM_BOOTH_CONTROLLER_PORT}:${SCREAM_BOOTH_CONTROLLER_PORT}"
       - "/dev/snd/controlC0:/dev/snd/controlC0"
       - "/dev/snd/pcmC0D0c:/dev/snd/pcmC0D0c"
       - "/dev/snd/pcmC0D0p:/dev/snd/pcmC0D0p"
@@ -25,16 +25,17 @@ services:
       - "/dev/snd/timer:/dev/snd/timer"
     volumes:
       - "scream-booth-recordings:/recordings:rw"
+    restart: unless-stopped
 
   uploader:
     build:
       context: .
       dockerfile: uploader/Dockerfile
     extra_hosts:
-      - "scream-booth-upload-server:188.120.247.75"
+      - "scream-booth-upload-server:${SCREAM_BOOTH_UPLOAD_SERVER_IP}"
     environment:
       - UPLOAD_SOURCE_DIR=/recordings/out
-      - UPLOAD_DEST=scream-uploader@scream-booth-upload-server:~/scream-booth-recording
+      - UPLOAD_DEST=${SCREAM_BOOTH_UPLOADER_USER}@scream-booth-upload-server:/recorder_uploads
     volumes:
       - "scream-booth-recordings:/recordings:rw"
       - "./uploader/id_rsa:/ssh/id_rsa:ro"

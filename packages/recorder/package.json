@@ -7,7 +7,7 @@
     "build:recorder": "rimraf ./dist/* && tsc --build tsconfig.json",
     "start:recorder": "yarn build:recorder && cross-env NODE_ENV=developemnt DEBUG=scream-booth:* node dist/index.js",
     "start:recorder:production": "node dist/index.js",
-    "start:recorder:uploader": "sshync $SCREAM_BOX_RECORDER_OUT_DIR $SCREAM_BOX_UPLOADER_DEST"
+    "start:recorder:uploader": "sshync $SCREAM_BOOTH_RECORDER_OUT_DIR $SCREAM_BOOTH_UPLOADER_DEST"
   },
   "dependencies": {
     "@radist2s/naudiodon": "^2.3.6-alpha",

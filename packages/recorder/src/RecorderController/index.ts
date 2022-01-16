@@ -10,15 +10,17 @@ const debug = debugDefault('scream-booth:controller');
 config();
 
 const initController = () => {
-  const { SCREAM_BOX_CONTROLLER_PORT, SCREAM_BOX_CONTROLLER_PORT_SPEED } = process.env;
+  const { SCREAM_BOOTH_CONTROLLER_PORT, SCREAM_BOOTH_CONTROLLER_PORT_SPEED } = process.env;
 
-  if (!SCREAM_BOX_CONTROLLER_PORT)
-    throw new Error('No environment variable SCREAM_BOX_CONTROLLER_PORT specified');
+  if (!SCREAM_BOOTH_CONTROLLER_PORT)
+    throw new Error('No environment variable SCREAM_BOOTH_CONTROLLER_PORT specified');
 
-  debug('Serial setup', { SCREAM_BOX_CONTROLLER_PORT_SPEED, SCREAM_BOX_CONTROLLER_PORT });
+  debug('Serial setup', { SCREAM_BOOTH_CONTROLLER_PORT_SPEED, SCREAM_BOOTH_CONTROLLER_PORT });
 
-  const serialPort = new SerialPort(SCREAM_BOX_CONTROLLER_PORT, {
-    baudRate: SCREAM_BOX_CONTROLLER_PORT_SPEED ? Number(SCREAM_BOX_CONTROLLER_PORT_SPEED) : 115200,
+  const serialPort = new SerialPort(SCREAM_BOOTH_CONTROLLER_PORT, {
+    baudRate: SCREAM_BOOTH_CONTROLLER_PORT_SPEED
+      ? Number(SCREAM_BOOTH_CONTROLLER_PORT_SPEED)
+      : 115200,
   });
 
   return new Promise<Firmata>((resolve, reject) => {
@@ -57,16 +59,16 @@ export const getSerialPortButton = async ({
     onActivate();
   };
 
-  const { SCREAM_BOX_CONTROLLER_BUTTON_READ_PIN } = process.env;
-  const BUTTON_READ_PIN = SCREAM_BOX_CONTROLLER_BUTTON_READ_PIN
-    ? Number(SCREAM_BOX_CONTROLLER_BUTTON_READ_PIN)
+  const { SCREAM_BOOTH_CONTROLLER_BUTTON_READ_PIN } = process.env;
+  const BUTTON_READ_PIN = SCREAM_BOOTH_CONTROLLER_BUTTON_READ_PIN
+    ? Number(SCREAM_BOOTH_CONTROLLER_BUTTON_READ_PIN)
     : 9;
 
   board.pinMode(BUTTON_READ_PIN, Board.PIN_MODE.PULLUP);
 
-  const { SCREAM_BOX_CONTROLLER_BUTTON_DEBOUNCE_TIME } = process.env;
-  const buttonDebounceTime = SCREAM_BOX_CONTROLLER_BUTTON_DEBOUNCE_TIME
-    ? Number(SCREAM_BOX_CONTROLLER_BUTTON_DEBOUNCE_TIME)
+  const { SCREAM_BOOTH_CONTROLLER_BUTTON_DEBOUNCE_TIME } = process.env;
+  const buttonDebounceTime = SCREAM_BOOTH_CONTROLLER_BUTTON_DEBOUNCE_TIME
+    ? Number(SCREAM_BOOTH_CONTROLLER_BUTTON_DEBOUNCE_TIME)
     : 3000;
 
   const debounceDeactivate = debounce(deactivate, buttonDebounceTime, { leading: false });
@@ -87,15 +89,15 @@ export const getSerialPortButton = async ({
 
 const initButtonLight = (board: Firmata) => {
   const {
-    SCREAM_BOX_CONTROLLER_BUTTON_LIGHT_PIN,
-    SCREAM_BOX_CONTROLLER_BUTTON_INVERTED_LIGHT_PIN,
+    SCREAM_BOOTH_CONTROLLER_BUTTON_LIGHT_PIN,
+    SCREAM_BOOTH_CONTROLLER_BUTTON_INVERTED_LIGHT_PIN,
   } = process.env;
-  const lightPin = SCREAM_BOX_CONTROLLER_BUTTON_LIGHT_PIN
-    ? Number(SCREAM_BOX_CONTROLLER_BUTTON_LIGHT_PIN)
+  const lightPin = SCREAM_BOOTH_CONTROLLER_BUTTON_LIGHT_PIN
+    ? Number(SCREAM_BOOTH_CONTROLLER_BUTTON_LIGHT_PIN)
     : 12;
 
-  const lightInvertedPin = SCREAM_BOX_CONTROLLER_BUTTON_INVERTED_LIGHT_PIN
-    ? Number(SCREAM_BOX_CONTROLLER_BUTTON_INVERTED_LIGHT_PIN)
+  const lightInvertedPin = SCREAM_BOOTH_CONTROLLER_BUTTON_INVERTED_LIGHT_PIN
+    ? Number(SCREAM_BOOTH_CONTROLLER_BUTTON_INVERTED_LIGHT_PIN)
     : 11;
 
   const lightHelperPin = 13;
