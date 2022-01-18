@@ -23,11 +23,16 @@ export const debugByTerminalButton = ({
     ) => {
       if (key?.shift && key.name === 'r') {
         if (isActivated) return;
-        isActivated = true;
         onActivate();
+        isActivated = true;
       } else if (key?.shift && key.name === 's') {
         if (!isActivated) return;
         onDeactivate();
+        isActivated = false;
+      } else if (key?.ctrl && key.name === 'c') {
+        console.log('Exiting...');
+        onDeactivate();
+        process.exit(0);
       }
     }
   );
