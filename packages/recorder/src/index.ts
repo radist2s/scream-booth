@@ -5,6 +5,7 @@ import { config } from 'dotenv';
 import debugDefault from 'debug';
 import { getSerialPortButton } from './RecorderController';
 import { intervalToDuration, formatDuration } from 'date-fns';
+import { debugByTerminalButton } from './RecorderController/debug-by-terminal-button';
 
 const SAMPLE_RATE = 44100;
 const CHANNEL_COUNT = 1;
@@ -13,8 +14,8 @@ const debug = debugDefault('scream-booth:recorder');
 
 config();
 
-const main = async () => {
-  debug('Main starts...');
+const mainWithButtonController = async () => {
+  debug('Main with button controller starts...');
   let audioRecorder: ReturnType<typeof startSoXAudioRecorder> | undefined;
 
   const buttonHandlers = await getSerialPortButton({
@@ -32,6 +33,32 @@ const main = async () => {
       audioRecorder?.stop();
       audioRecorder = undefined;
       buttonHandlers.buttonLightOff();
+    },
+  });
+
+  console.warn('Press Ctrl + C to exit.');
+  return new Promise(() => {});
+};
+
+const mainWithTerminalDebugButton = async () => {
+  debug('Main debug starts...');
+  let audioRecorder: ReturnType<typeof startSoXAudioRecorder> | undefined;
+
+  debugByTerminalButton({
+    onActivate() {
+      if (audioRecorder) audioRecorder.stop();
+      audioRecorder = startSoXAudioRecorder();
+
+      audioRecorder.stream()?.on('close', function (code) {
+        console.warn('Light off');
+      });
+
+      console.warn('Light on');
+    },
+    onDeactivate() {
+      audioRecorder?.stop();
+      audioRecorder = undefined;
+      console.warn('Light off');
     },
   });
 
@@ -146,4 +173,8 @@ const startSoXAudioRecorder = () => {
   return audioRecorder;
 };
 
-main();
+if (process.env.RECORDER_BUTTON_DEBUG) {
+  mainWithTerminalDebugButton();
+} else {
+  mainWithButtonController();
+}

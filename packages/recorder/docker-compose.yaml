@@ -12,6 +12,7 @@ services:
       - SCREAM_BOOTH_CONTROLLER_PORT=${SCREAM_BOOTH_CONTROLLER_PORT}
       - SCREAM_BOOTH_CONTROLLER_PORT_SPEED=57600
       - "DEBUG=scream-booth:*"
+#      - RECORDER_BUTTON_DEBUG=true
 #      - SOX_AUDIODEV=hw:CARD=Intel,DEV=0
 #      - SOX_AUDIODRIVER=alsa
     devices:
