@@ -18,18 +18,12 @@ play -t raw -r 16k -e signed -b 16 -c 1 snake.raw
 -c = number of channels
 --endian is also interesting
 ```
-
-### List Alsa Recording devices
-```bash
-arecord -L
-```
-
 ### Test alsa device for recording
 ```
 AUDIODEV="hw:CARD=I82801AAICH,DEV=0" AUDIODRIVER=alsa rec -d
 ```
 
-### List Devices
+### List of Devices
 
 * Mac
     ```
@@ -40,7 +34,18 @@ AUDIODEV="hw:CARD=I82801AAICH,DEV=0" AUDIODRIVER=alsa rec -d
     ```
     ffmpeg -list_devices true -f dshow -i dummy
     ```
-  
+
+* Linux
+    List Alsa Recording devices
+    ```
+    arecord -L
+    ```
+    Alsa should be installed:
+    ```
+    sudo apt install alsa alsa-utils 
+    ```
+
+
 ### Record wia ffmpeg:
 
 * Mac
@@ -51,12 +56,6 @@ AUDIODEV="hw:CARD=I82801AAICH,DEV=0" AUDIODRIVER=alsa rec -d
     ```
     ffmpeg -f dshow -i audio="Device name" path-to-file\file-name.mp3
     ```
-
-# Linux
-```bash
-sudo apt install alsa alsa-utils 
-```
-
 ### Test SoX
 ```bash
 play -n -c1 synth 3 sine 500
