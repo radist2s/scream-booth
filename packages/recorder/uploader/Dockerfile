@@ -1,6 +1,4 @@
-FROM node:16-alpine3.14
-RUN apk add --no-cache python3
-RUN apk add --no-cache make gcc g++ linux-headers udev libexecinfo-dev libexecinfo
+FROM i386/alpine
 RUN apk add --no-cache openssh
 RUN apk add --no-cache rsync
 RUN apk add --no-cache inotify-tools
