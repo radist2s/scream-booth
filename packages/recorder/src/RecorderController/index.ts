@@ -62,7 +62,7 @@ export const getSerialPortButton = async ({
   const { SCREAM_BOOTH_CONTROLLER_BUTTON_READ_PIN } = process.env;
   const BUTTON_READ_PIN = SCREAM_BOOTH_CONTROLLER_BUTTON_READ_PIN
     ? Number(SCREAM_BOOTH_CONTROLLER_BUTTON_READ_PIN)
-    : 9;
+    : 12;
 
   board.pinMode(BUTTON_READ_PIN, Board.PIN_MODE.PULLUP);
 
@@ -94,7 +94,7 @@ const initButtonLight = (board: Firmata) => {
   } = process.env;
   const lightPin = SCREAM_BOOTH_CONTROLLER_BUTTON_LIGHT_PIN
     ? Number(SCREAM_BOOTH_CONTROLLER_BUTTON_LIGHT_PIN)
-    : 12;
+    : 10;
 
   const lightInvertedPin = SCREAM_BOOTH_CONTROLLER_BUTTON_INVERTED_LIGHT_PIN
     ? Number(SCREAM_BOOTH_CONTROLLER_BUTTON_INVERTED_LIGHT_PIN)

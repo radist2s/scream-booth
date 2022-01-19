@@ -125,7 +125,9 @@ const startSoXAudioRecorder = () => {
     fs.mkdirSync(fileDirectoryTmp, { recursive: true });
   }
 
-  const fileName = new Date().toISOString().concat(`.${fileType}`);
+  const fileName = `${process.env.SCREAM_BOOTH_RECORDER_FILE_NAME_PREFIX}${new Date()
+    .toISOString()
+    .concat(`.${fileType}`)}`;
   const fileTmpPath = path.join(fileDirectoryTmp, fileName);
   const fileOutPath = path.join(fileOutDirectory, fileName);
 
