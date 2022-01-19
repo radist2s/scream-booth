@@ -1,7 +1,7 @@
 #!/bin/sh
 
 make_sync() {
-  rsync -avz $UPLOAD_SOURCE_DIR $UPLOAD_DEST
+  rsync --remove-source-files -avz $UPLOAD_SOURCE_DIR $UPLOAD_DEST
 }
 
 cat /ssh/id_rsa >> /root/.ssh/id_rsa && chmod 600 /root/.ssh/id_rsa
