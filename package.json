@@ -11,6 +11,10 @@
     "name": "Alex Batalov",
     "email": "radist2s@gmail.com"
   },
+  "scripts": {
+    "recorder": "docker-compose --project-directory packages/recorder up -d",
+    "recorder:stop": "docker-compose --project-directory packages/recorder down"
+  },
   "lint-staged": {
     "!(.yarn)/**/*.{js,jsx,ts,tsx}": "eslint --max-warnings 0 --no-ignore .eslintrc.js",
     "*.{js,jsx,ts,tsx,scss}": [
