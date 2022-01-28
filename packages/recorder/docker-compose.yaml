@@ -42,6 +42,7 @@ services:
     volumes:
       - "scream-booth-recordings:/recordings:rw"
       - "./uploader/id_rsa:/ssh/id_rsa:ro"
+    restart: unless-stopped
 
 volumes:
   scream-booth-recordings:
